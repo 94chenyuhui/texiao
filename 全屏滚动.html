@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>  
+		<script type="text/javascript" src="js/jquery.mousewheel.js" ></script>
+		    <style>  
+            body,html{  
+                margin:0;  
+                padding: 0; 
+                height: 100%;
+                width: 100%; 
+       			overflow: hidden;
+             	position: relative;
+            }  
+            li{
+					list-style-type: none;
+				}
+            .a{
+            	height: 100%;
+             	width: calc(100% + 18px);/*隐藏滚动条*/
+                overflow: auto;
+                position: absolute;
+            }
+            .img{
+            	height: 100%;
+            	width: 100%;
+            	position: relative;
+            	
+            }
+            .img1,.img2,.img3,.img4,.img5,.img6,.img7{
+            	position: absolute;
+            	transition:2s;
+            	opacity: 0;
+            	/*display: none;*/
+            }
+          	.img1{
+            	width:560px;height:360px;top:-100px;left:50%;margin-left:-280px;
+            }
+            .img2{
+            	width:740px;height:460px;bottom:-200px;left:50%;margin-left:-370px;
+            }
+            .img3{
+            	width:600px;height:210px;left:-50px;top:50%;margin-top:-105px;
+            }
+            .img4{
+            	width:400px;height:360px;right:0px;top:50%;margin-top:-180px;
+            }
+            .img5{
+            	width:760px;height:300px;left:-50px;top:50%;margin-top:-150px;
+            }
+            .img6{
+            	width:760px;height:304px;right:0px;top:50%;margin-top:-152px;
+            }
+            .img7{
+            	width:300px;height:400px;top:-100px;left:50%;margin-left:-150px;
+            }
+            .img1.qq{
+            	top:50%;margin-top:-180px;opacity:1;
+            }
+            .img2.qq{
+            	top:50%;margin-top:-230px;opacity:1;
+            }
+            .img3.qq{
+            	left:100px;opacity:1;
+            }
+            .img4.qq{
+            	right:200px;opacity:1;
+            }
+            .img5.qq{
+            	left:100px;opacity:1;
+            }
+            .img6.qq{
+            	right:600px;opacity:1;
+            }
+            .img7.qq{
+            	top:50%;margin-top:-200px;opacity:1;
+            }
+            /*.qq{
+            	opacity:1;
+            }*/
+            .img1 img{
+            	width:560px;height:360px;
+            }
+            .img2 img{
+            	width:740px;height:460px;
+            }
+            .img3 img{
+            	width:600px;height:210px;
+            }
+            .img4 img{
+            	width:400px;height:360px;
+            }
+            .img5 img{
+            	width:760px;height:300px;
+            }
+            .img6 img{
+            	width:760px;height:304px;
+            }
+            
+            .logo{
+            		
+            		background: url(img/logo.png)no-repeat center/cover;
+					position: absolute;
+					width:242px;
+					height:61px;
+					top:20px;
+					left:20px;
+            }
+            ul{
+            	position: fixed;
+            	right: 35px;
+				top: 50%;
+				margin-top: -105px;
+            }
+            li{
+            	height: 16px;
+				width:16px;
+				margin: 5px 0;
+				border-radius:100%;
+				cursor: pointer;
+				border: 2px solid #fff;
+            }
+            li.on{
+            	background: #fff;
+            }
+
+        </style>  
+	</head>
+	<body>
+	
+   <div class="a">
+		   <div class="img">
+		   	 <div class="img1 qq">
+		   	 	<img src="img/1-2.png" />
+		   	 </div>
+		   </div>
+		   <div class="img">
+		   	 <div class="img2">
+		   	 	<img src="img/2-2.png" />
+		   	 </div>
+		   </div>
+		   <div class="img">
+		   	 <div class="img3">
+		   	 	<img src="img/3-2.png" />
+		   	 </div>
+		   </div>
+		   <div class="img">
+		   	 <div class="img4">
+		   	 	<img src="img/4-2.png" />
+		   	 </div>
+		   </div>
+		   <div class="img">
+		   	 <div class="img5">
+		   	 	<img src="img/5-2.png" />
+		   	 </div>
+		   </div>
+		   <div class="img">
+		   	 <div class="img6">
+		   	 	<img src="img/6-2.png" />
+		   	 </div>
+		   </div>
+		   <div class="img">
+		   	 <div class="img7">
+		   	 	<img src="img/7-3.png" width="300" height="260"/>
+		   	 	<img src="img/7-2.png" width="300" height="140"/>
+		   	 </div>
+		   </div>
+		   <ul>
+		   	<li class="on"></li>
+		   	<li></li>
+		   	<li></li>
+		   	<li></li>
+		   	<li></li>
+		   	<li></li>
+		   	<li></li>
+		   </ul>
+		</div>     
+	
+        	<script>  
+        		
+        		
+        		/*
+        		 大概思路
+        		 获取.a，把.a的滚动高度设置为0
+        		 
+        		 先获取window的高度
+        		 当window大小发生改变的时候，新的window高度替换旧的
+        		 
+        		 遍历所有的全屏图div，获取下标，根据下标插入背景图，
+        		 再在全屏图div内部插入logo的div
+        		 
+        		 给按钮绑定单击事件
+        		 获取当前单击按钮的下标
+        		 给当前按钮增加on class。在获取其他同辈元素，删除on class
+        		 获取跟当前按钮下标对应的动画div，添加qq class，
+        		 再找到当前触发之外的其他动画div，删除qq class
+        		 给.a绑定动画
+        		 当前触发按钮为下标几，就把.a的滚动条移动到 当前window高度*当前触发按钮下标   的位置
+        		 
+        		 用个变量装滑动的次数
+        		 给.a绑定滑轮事件
+        		
+        		 判断滑轮是向上滑还是向下滑
+        		 上滑一次，就-1，下滑一次就+1
+        		当下滑到最大数时，就不再能下滑，上滑也一样
+        		 
+        		 获取跟滑动次数对应的按钮位置，增加和删除 on class
+        		 获取跟滑动次数对应的动画div位置，增加和删除qq class
+        		 
+        		 给.a绑定动画
+        		 当前滑动次数为几，就把.a的滚动条移动到 当前window高度*当前滑动次数   的位置
+        		 * */
+       $(function(){
+       		$(".a").scrollTop(0);//每次刷新页面，都回到最顶部
+       		var img=$(window).height();//获取window的高
+       		/*当window的大小改变，触发resize事件，将新的window大小替换之前旧的window大小*/
+       		$(window).resize(function(){
+					img=$(window).height();	
+				});
+       		/*遍历全屏的div，给每个div添加不同的背景，并且在div内部插入一个新的div，function（i）表示所有遍历出来的元素下标，0开始*/
+       		$(".img").each(function(i){
+       			var str=i==1?"rgb(217, 127, 92)":"url(img/"+(i+1)+".jpg)no-repeat center/cover";
+       			$(this).css("background",str);
+       			$(this).append("<div class='logo'></div>");
+       		});
+       		
+       		/*给按钮绑定点击事件，当前按钮被点击，添加on class，并其他的同辈删除on class
+       		 给跟按钮下标对应的图片，添加qq class，并其他同辈删除qq class
+       		 给.a绑定动画
+       		 当前触发按钮为下标几，就把.a的滚动条移动到 当前window高度*当前触发按钮下标 的位置
+       		 * */
+       		$("ul li").click(function(){
+       			var str=$(this).index()
+       			$(this).addClass("on").siblings().removeClass("on");
+       			$(".img"+(str+1)).addClass("qq");// 获取跟当前按钮下标对应的动画div，添加qq class，
+       			$(".img").eq(str).siblings().find("div").removeClass("qq");//找到其他动画div，删除qq class
+       			$(".a").stop().animate({
+       				scrollTop:str*img+"px"
+       			},600);	
+       			
+       			
+       		});
+       		/*
+       		 用了mousewheel插件判断滚动条是向上滚动还是向下滚动
+       		 先获取当前本地时间，用nn接住
+       		 为.a绑定mousewheel方法
+       		 if判断当前本地时间 减去 触发mousewheel触发之前的本地时间大于500就执行
+       		 用触发之后的本地时间替换触发之前的本地时间，这是为了避免滑动连续触发。
+       		 ddd=-1为向下滑动，ddd=1为向上滑动
+       		 gg=每向下滑动一次+1，向上滑动一次-1，向下+1=全屏图的个数就不能再+1，向上-1=全屏图的第一张，就不能再-1.
+       		 
+       		 获取按钮下标为gg的元素，添加on class，其余的同辈删除on class
+       		 获取图片动画下标为gg的元素，添加qq class，其余同辈元素删除qq class
+       		 给.a绑定动画
+       		 当前触发按钮为下标几，就把.a的滚动条移动到 当前window高度*当前触发按钮下标 的位置
+       		 * */
+       				var nn=new Date();
+					gg=0;
+				$('.a').mousewheel(function() {
+					if ( new Date() - nn > 500 ){
+						nn = new Date();
+						var ddd = arguments[1];/*ddd等于-1，代表向下滑，等于1代表向上滑*/
+						/*当ddd小于0：（gg大于或者等于全屏图的个数-1，那么gg就等于0：否则就gg+1）：（gg小于或者等于0，那么gg等于全屏图个数-1：gg-1）*/
+						//gg=ddd<0?(gg>=$(".a .img").length-1?0:gg+1):(gg<=0?$(".a .img").length-1:gg-1);/*这个为上下无限循环*/
+						/*当ddd小于0：（gg大于等于全屏图个数-1，那么gg等于gg：否则gg+1）：（gg小于等于0？小于0就gg就等于0：否则gg-1）*/
+						gg=ddd<0?(gg>=$(".a .img").length-1?gg:gg+1):(gg<=0?0:gg-1);/*到最大数，不能再下滑，到最小数，不能再上滑*/
+						/*大概意思是gg=每向下滑动一次就+1，向上滑动一次就-1.*/
+						$("ul li").eq(gg).addClass("on").siblings().removeClass("on");
+						$(".img"+(gg+1)).addClass("qq");
+       					$(".img").eq(gg).siblings().find("div").removeClass("qq");
+						$(".a").stop().animate({
+							scrollTop:gg*img+"px"
+						},600);	
+						
+				};	
+				});
+				
+				
+      });
+    </script>
+	</body>
+</html>

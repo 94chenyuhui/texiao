@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>旋转木马轮播图</title>
+</head>
+<style>
+	html {
+		overflow: scroll
+	}
+
+	html,
+	body,
+	div,
+	span,
+	applet,
+	object,
+	iframe,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	p,
+	blockquote,
+	pre,
+	a,
+	abbr,
+	acronym,
+	address,
+	big,
+	cite,
+	code,
+	del,
+	dfn,
+	em,
+	img,
+	ins,
+	kbd,
+	q,
+	s,
+	samp,
+	small,
+	strike,
+	strong,
+	sub,
+	sup,
+	tt,
+	var,
+	b,
+	u,
+	i,
+	center,
+	dl,
+	dt,
+	dd,
+	ol,
+	ul,
+	li,
+	fieldset,
+	form,
+	label,
+	legend,
+	table,
+	caption,
+	tbody,
+	tfoot,
+	thead,
+	tr,
+	th,
+	td,
+	article,
+	aside,
+	canvas,
+	details,
+	embed,
+	figure,
+	figcaption,
+	footer,
+	header,
+	hgroup,
+	menu,
+	nav,
+	output,
+	ruby,
+	section,
+	summary,
+	time,
+	mark,
+	audio,
+	video {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		vertical-align: baseline;
+		font-family: 'Microsoft yahei';
+	}
+	/* HTML5 display-role reset for older browsers */
+
+	article,
+	aside,
+	details,
+	figcaption,
+	figure,
+	footer,
+	header,
+	hgroup,
+	menu,
+	nav,
+	section {
+		display: block;
+	}
+
+	body {
+		line-height: 1;
+	}
+
+	ol,
+	ul {
+		list-style: none;
+	}
+
+	blockquote,
+	q {
+		quotes: none;
+	}
+
+	blockquote:before,
+	blockquote:after,
+	q:before,
+	q:after {
+		content: '';
+		content: none;
+	}
+
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;
+	}
+
+	.clearF:after,
+	.clearF:before {
+		content: '';
+		display: block;
+		clear: both;
+	}
+
+	a {
+		text-decoration: none
+	}
+
+	.wrap {
+		width: 1200px;
+		margin: 100px auto;
+	}
+
+	.slide {
+		height: 500px;
+		position: relative;
+	}
+
+	.slide li {
+		position: absolute;
+		left: 200px;
+		top: 0;
+	}
+
+	.slide li img {
+		width: 100%;
+	}
+
+	.arrow {
+		opacity: 0;
+		position: absolute;
+		width: 100%;
+		top: 50%;
+		z-index: 100;
+	}
+
+	.prev,
+	.next {
+		width: 76px;
+		height: 112px;
+		position: absolute;
+		top: 50%;
+		margin-top: -56px;
+		z-index: 99;
+		background: url(img/prev.png) no-repeat;
+	}
+
+	.next {
+		background: url(img/next.png);
+		right: 0;
+	}
+</style>
+
+<body>
+	<div class="wrap">
+		<div class="slide">
+			<ul>
+				<li>
+					<a href="#">
+						<img src="img/slidepic1.jpg">
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<img src="img/slidepic2.jpg">
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<img src="img/slidepic3.jpg">
+					</a>
+				</li>
+
+				<li>
+					<a href="#">
+						<img src="img/slidepic4.jpg">
+					</a>
+				</li>
+
+				<li>
+					<a href="#">
+						<img src="img/slidepic5.jpg">
+					</a>
+				</li>
+			</ul>
+			<div class="arrow">
+				<a href="#" class="prev"></a>
+				<a href="#" class="next"></a>
+			</div>
+		</div>
+	</div>
+	<script>
+		window.onload = function () {
+			var slide = document.getElementsByClassName("slide")[0];
+			var slideLi = slide.getElementsByTagName('li');
+
+			var wrap = document.getElementsByClassName('wrap')[0];
+			var arrow = document.getElementsByClassName('arrow')[0];
+			var prev = arrow.getElementsByClassName('prev')[0];
+			var next = arrow.getElementsByClassName('next')[0];
+			var json = [ //创建一个存储轮播图样式的数组
+				{
+					width: 400,
+					top: 20,
+					left: 50,
+					opacity: 20,
+					z: 2
+				},
+				{
+					width: 600,
+					top: 60,
+					left: 0,
+					opacity: 80,
+					z: 3
+				},
+				{
+					width: 800,
+					top: 100,
+					left: 200,
+					opacity: 100,
+					z: 4
+				},
+				{
+					width: 600,
+					top: 60,
+					left: 600,
+					opacity: 80,
+					z: 3
+				},
+				{
+					width: 400,
+					top: 20,
+					left: 750,
+					opacity: 20,
+					z: 2
+				},
+			];
+			/*鼠标移入移出事件*/
+			wrap.onmouseover = function () {
+				animate(arrow, {
+					opacity: 100
+				}) //启动函数，开始定时器模拟动画效果
+			}
+			wrap.onmouseout = function () {
+				animate(arrow, {
+					opacity: 0
+				})
+			}
+			/*点击按钮，左右切换事件*/
+			change(); //调用函数，初始化轮播图样式
+			var btn = arrow.children;
+			for (var i = 0; i < btn.length; i++) { //按钮点击
+				btn[i].onclick = function () {
+					if (this.className == 'prev') {
+						change(false);
+
+					} else {
+						change(true);
+
+					}
+				}
+			}
+			/*创建改变轮播图样式的函数*/
+			function change(flag) {
+				
+				if (flag) {
+					json.unshift(json.pop()); //参数为true，将json的最后一个数组删除，并抢返回的删除数组插入到开头位置
+				} else {
+					json.push(json.shift()); //否则将json第一个数组删除，并将返回的被删除数组插入到最后位置
+				}
+
+				for (var i = 0; i < json.length; i++) { //遍历存储轮播图样式的数组，调用模拟动画函数，并将轮播图样式设置到对应的HTML标签内
+					animate(slideLi[i], {
+						width: json[i].width,
+						top: json[i].top,
+						left: json[i].left,
+						opacity: json[i].opacity,
+						zIndex: json[i].z
+					})
+				}
+			}
+			/*创建模拟动画函数*/
+			function animate(obj, json) {
+				clearInterval(obj.time);
+				obj.time = setInterval(function () { //给obj参数绑定定时器，并开始定时器
+					var flag = true;
+					for (var i in json) { //遍历循环数组或对象的属性和值
+						var current = 0;
+						if (i == "opacity") { //判断属性是否等于"opacity"
+							current = parseInt(getStyle(obj, i) * 100); //获取obj的i属性的值并*100，再取整数
+						} else {
+							current = parseInt(getStyle(obj, i)); //获取obj的i属性的值
+						}
+						//获取json数组i属性的值-current/10
+						var spet = (json[i] - current) / 10;
+						spet = spet > 0 ? Math.ceil(spet) : Math.floor(spet); //向上或者向下取整
+						if (i == "opacity") {
+							//设置obj参数的opacity样式
+							obj.style.opacity = (current + spet) / 100;
+							obj.style.filter = "alpha(opacity=" + (current + spet) + ")"; //IE浏览器设置obj参数样式的透明度
+						} else if (i == "zIndex") {
+							obj.style.zIndex = json[i];
+						} else {
+							obj.style[i] = current + spet + "px";
+						}
+						if (current != json[i]) { //判断获取obj的值是否跟json数组的值一致，不一致才执行
+							flag = false;
+						}
+					}
+					if (flag) {
+						clearInterval(obj.time); //停止定时器
+						//alert("停止")
+					}
+
+				}, 10)
+			};
+
+			function getStyle(obj, attr) { //创建获取样式函数
+				if (obj.currentStyle) {
+					return obj.currentStyle[attr];
+				} else {
+					return getComputedStyle(obj, false)[attr];
+				}
+			}
+		}
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>回到顶部</title>
+		<script type="text/jscript" src="http://hovertree.com/ziyuan/jquery/jquery-1.11.3.min.js"></script>
+		<style>
+			body{
+				height: 5000px;
+				position: relative;
+			}
+			.qq{
+				height: 50px;
+				width: 50px;
+				background: red;
+				position: fixed;
+				bottom: 80px;
+				right: 10px;
+				
+			}
+		</style>
+	</head>
+	<body>
+		<div class="qq">
+			
+		</div>
+		<script>
+			
+			/*
+			 浏览器滚动条达到300，就显示返回顶部
+			 先把返回顶部隐藏
+			 给window绑定滚动条事件.scroll就是滚动条事件，你每滚动一次，就会触发
+			 获取window垂直滚动条的位置，.scrollTop（）获取垂直滚动条位置，判断大于300吗?大于就显示，小于就隐藏
+			 给返回顶部绑定click事件
+			 给html绑定动画，只能绑定html，body无效。只要触发，就把垂直滚动条设置为0，在700毫秒执行完毕。
+			 
+			 * */
+			$(function(){
+				var aa=300;
+				$(".qq").hide();
+				$(window).scroll(function(){
+					$(this).scrollTop()>aa?$(".qq").show():$(".qq").hide();
+				});
+				$(".qq").click(function(){
+					$("html").animate({
+						scrollTop:0
+					},700);
+				});
+			});
+		</script>
+	</body>
+</html>

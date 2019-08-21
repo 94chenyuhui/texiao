@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>注册页面的表单实例（含验证）</title>
+	</head>
+	<body>
+		<form name="creation" method="post" action="http://118.190.205.4:8087/system/login">
+			<table align="center" width="500px">
+				<tr>
+					<td><label for="account">用户名:</label></td>
+					<td><input type="texe" name="account" id="account" placeholder="只能用邮箱注册" /></td>
+					<td id="test_user"></td>
+				</tr>
+				<tr>
+					<td><label for="password">密码:</label></td>
+					<td><input type="password" name="password" id="password" placeholder="6位密码只能由数字跟字母组成" /></td>
+					<td id="test_pw"></td>
+				</tr>
+				<tr>
+					<td><label for="password1">请确认密码:</label></td>
+					<td><input type="password" name="password" id="password1" placeholder="确认密码" /></td>
+					<td id="is_test_pw"></td>
+				</tr>
+				<tr>
+					<td><button type="submit" id="submit_form" >提交</button></td>
+					<td><button type="reset">重置</button></td>
+				</tr>
+			</table>
+		</form>
+		<script>
+			/* 验证邮箱格式	
+			onblur失去焦点事件，用户离开输入框时执行javascript代码 */
+			let text=document.getElementById("account");
+			text.onblur=function(){
+				let emaliReg=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+				if(text.value!=""&& text.value.search(emaliReg) != -1){
+					document.getElementById("test_user").innerHTML = "<font color='green' size='3px'>√邮箱格式正确</font>";
+					
+				}else{
+					document.getElementById("test_user").innerHTML = "<font color='red' size='3px'>邮箱格式错误</font>";
+					
+				}
+			}
+			/* 验证密码格式 */
+			let password=document.getElementById("password");
+			password.onblur=function(){
+				let passwordReg=/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6}$/;
+				if(password.value!=""&&password.value.search(passwordReg)!=-1){
+					document.getElementById("test_pw").innerHTML="<font color='green' size='3px'>√密码格式正确</font>"
+				}else{
+					document.getElementById("test_pw").innerHTML="<font color='red' size='3px'>密码格式错误</font>"
+				}
+			}
+			/*验证两次输入的密码是否一致*/
+			let password1=document.getElementById("password1");
+			password1.onblur=function(){
+				let password=document.getElementById("password").value;
+				if(password1.value==""){
+					document.getElementById("is_test_pw").innerHTML="<font color='red' size='3px'>密码不能为空</font>"
+				}else if(password1.value==password){
+					document.getElementById("is_test_pw").innerHTML="<font color='green' size='3px'>√两次输入的密码相同</font>"
+				}else{
+					document.getElementById("is_test_pw").innerHTML="<font color='red' size='3px'>两次输入密码不相同</font>"
+				}
+			}
+			/*验证表单是否已经填好*/
+			let submit_form=document.getElementById("submit_form");
+			submit_form.onclick=function(){
+				let account=document.getElementById("account").value;
+				let password=document.getElementById("password").value;
+				let password1=document.getElementById("password1").value;
+				let emailReg=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+				let passwordReg=/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6}$/;
+				if (account!=""&&account.search(emailReg)!=-1) {
+						if(password!=""&&password.search(passwordReg)!=-1){
+							if(password==password1){
+								alert("信息正确，可以提交");
+								return true
+							}else{
+								alert("两个密码不相同，不能提交");
+								return false
+							}
+						}else{
+							alert("密码格式不正确，不能提交");
+							return false
+						}
+				}else{
+					alert("邮箱格式错误，不能提交")
+					return false
+				}
+			}
+
+		</script>
+	</body>
+</html>

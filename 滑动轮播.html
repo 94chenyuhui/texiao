@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>网易轮播图</title>
+	</head>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		
+		img {
+			vertical-align: middle;
+		}
+		
+		.slide {
+			width: 500px;
+			height: 450px;
+			overflow: hidden;
+			position: relative;
+			margin: 0 auto;
+		}
+		
+		.slide .cont img {
+			width: 500px;
+			height: 400px;
+		}
+		
+		.slide .cont {
+			width: 500px;
+			height: 400px;
+		}
+		
+		.slide .cont div {
+			position: absolute;
+			left: 500px;
+		}
+		
+		.slide-bth .bth-prev,
+		.slide-bth .bth-next {
+			width: 22px;
+			height: 36px;
+			background: url(img/icon.png) 0 0 no-repeat;
+			position: absolute;
+			top: 50%;
+			margin-top: -36px;
+			left: 10px;
+			z-index: 100;
+		}
+		
+		.slide-bth .bth-next {
+			background-position: -8px -44px;
+			left: auto;
+			right: 10px;
+		}
+		
+		.bth-itemm {
+			width: 500px;
+			height: 50px;
+			background: red;
+			text-align: center;
+		}
+		
+		.slide-bth-item.active {
+			background-position: -24px -762px;
+		}
+		
+		.slide-bth-item {
+			display: inline-block;
+			width: 24px;
+			height: 20px;
+			margin: 15px 10px;
+			background: url(img/icon.png) -24px -782px no-repeat;
+			overflow: hidden;
+		}
+	</style>
+
+	<body>
+		<div class="slide" id="slide">
+			<div class="cont" id="cont">
+				<div>
+					<a href="#"><img src="img/1.jpg" /></a>
+				</div>
+				<div>
+					<a href="#"><img src="img/slidepic4.jpg" /></a>
+				</div>
+				<div>
+					<a href="#"><img src="img/3.jpg" /></a>
+				</div>
+				<div>
+					<a href="#"><img src="img/4.jpg" /></a>
+				</div>
+				<div>
+					<a href="#"><img src="img/5.jpg" /></a>
+				</div>
+				<div>
+					<a href="#"><img src="img/6.jpg" /></a>
+				</div>
+				
+				
+				<!--<div>
+					<a href="#"><img src="img/1.jpg" /></a>
+				</div>
+				<div>
+					<a href="#"><img src="img/slidepic4.jpg" /></a>
+				</div>
+				<div>
+					<a href="#"><img src="img/3.jpg" /></a>
+				</div>
+				<div>
+					<a href="#"><img src="img/4.jpg" /></a>
+				</div>
+				<div>
+					<a href="#"><img src="img/6.jpg" /></a>
+				</div>-->
+			</div>
+			<div class="slide-bth" id="slide-bth">
+				<span class="bth-prev"></span>
+				<span class="bth-next"></span>
+			</div>
+		</div>
+
+		<script>
+			window.onload = function() {
+				var slide = document.getElementById("slide");
+				var cont = document.getElementById("cont");
+				//var cc=document.querySelectorAll(".cont div");
+				// querySelector() 方法仅仅返回匹配指定选择器的第一个元素。如果你需要返回所有的元素，请使用 querySelectorAll() 方法替代。
+				var cont_img = cont.children; //.children获取所有的子节点，不包括文本，非标准；只能获取ID节点下的元素，class节点获取不到；
+				var slide_bth = document.getElementById("slide-bth");
+				var bth_item = slide_bth.children;
+
+				/*添加span按钮节点*/
+				var bth_itemm = document.createElement("div"); //创建新的div节点
+				bth_itemm.className = "bth-itemm"; //设置class
+				for(var i = 0; i < cont_img.length; i++) {
+					var span = document.createElement("span"); //创建新的span节点
+					span.className = "slide-bth-item"; //设置class
+					bth_itemm.appendChild(span); //将新的span节点添加到bth_itemm的子节点最后面
+
+				}
+				slide.appendChild(bth_itemm); //将新的bth_itemm节点添加到slide的子节点最后面
+				var bth = document.getElementsByClassName("slide-bth-item");
+
+				/*初始化*/
+				cont_img[0].style.left = 0 + "px";
+				cont_img[cont_img.length-1].style.left=-500+'px';
+				bth[0].className = "slide-bth-item active"
+				var cont_length = 0;
+
+				/*单击按钮 设置样式*/
+			
+					for(var i = 0; i < bth.length; i++) {
+						bth[i].index = i; //获取bth的下标
+						bth[i].onclick = function() {
+							for(var i = 0; i < bth.length; i++) {
+								if(this.index == i) {
+									cont_length = this.index;
+									bth[i].className = "slide-bth-item active"
+									cont_img[i].style.zIndex=99;
+									cont_img[i].style.left=500+'px';
+									animate(cont_img[i],{left:0});
+								} else {
+									bth[i].className = "slide-bth-item"
+									cont_img[i].style.zIndex=1;
+									animate(cont_img[i],{left:-500})
+									
+								}
+							}
+
+						}
+					}
+				
+				
+				/*思路，点击一次，500ms时间左移动500px，移动完然后瞬间移动到左边-500px位置*/
+				/*function aa() {
+					++cont_length;
+					if(cont_length > cont_img.length - 1) {
+						cont_length = 0;
+					}
+					
+					//cont_img[cont_length].style.left = 0 + "px";
+					//animate(cont_img[cont_length],{left:0});
+					if(cont_length==0){
+						cont_img[cont_length+1].style.left=500+'px';
+						animate(cont_img[cont_length],{left:0});
+						animate(cont_img[cont_img.length-1],{left:-500});
+					}else if(cont_length==cont_img.length-1){
+						cont_img[0].style.left=500+'px';
+						animate(cont_img[cont_length],{left:0});
+						animate(cont_img[cont_length-1],{left:-500});
+					}else{
+						cont_img[cont_length+1].style.left=500+'px';
+						animate(cont_img[cont_length],{left:0});
+						animate(cont_img[cont_length-1],{left:-500});
+						
+					}
+					cc()
+					return cont_length
+				}
+	
+
+				function bb() {
+					cont_length--;
+					if(cont_length < 0) {
+						cont_length = cont_img.length-1;
+					}
+
+					//cont_img[cont_length].style.left = 0 + "px";
+
+					animate(cont_img[cont_length],{left:0});
+					if(cont_length == 0) {
+						cont_img[cont_img.length-1].style.left=-500+'px';
+						animate(cont_img[cont_length+1],{left:500});
+					} else if(cont_length == cont_img.length - 1) {
+						cont_img[cont_length-1].style.left=-500+'px';
+						animate(cont_img[0],{left:500});
+						
+					} else {
+						cont_img[cont_length-1].style.left=-500+'px';
+						animate(cont_img[cont_length+1],{left:500});
+					}
+
+					cc()
+					return cont_length
+				}
+
+				function cc() {
+					for(var i = 0; i < bth.length; i++) {
+						if(cont_length == i) {
+							bth[cont_length].className = "slide-bth-item active"
+						} else {
+							bth[i].className = "slide-bth-item"
+						}
+					}
+				}
+				*/
+				
+				
+				for(var i = 0; i < bth_item.length; i++) {
+					bth_item[i].index = i;
+					bth_item[i].onclick = function() {
+						if(this.index == 0) {
+							--cont_length<0?cont_length=5:cont_length;
+							for (var i=0;i<cont_img.length;i++) {
+								if(i==cont_length){
+									bth[cont_length].className="slide-bth-item active";
+									cont_img[cont_length].style.zIndex=99;
+									cont_img[cont_length].style.left=-500+'px';
+									animate(cont_img[cont_length],{left:0});
+								}else{
+									cont_img[i].style.zIndex=1;
+									animate(cont_img[i],{left:500})
+									bth[i].className="slide-bth-item"
+								}
+							}
+						} else {
+							lunbo();
+						}
+
+					}
+				}
+				
+				slide.onmouseover=function(){
+					clearInterval(time);
+				}
+				slide.onmouseout=function(){
+					clearInterval(time);
+					time=setInterval(lunbo,3000)
+				}
+				var time=null;
+				time=setInterval(lunbo,3000);
+				function lunbo(){
+					++cont_length>cont_img.length-1?cont_length=0:cont_length;
+							for (var i=0;i<cont_img.length;i++) {
+								if(i==cont_length){
+								bth[cont_length].className="slide-bth-item active"	
+								cont_img[cont_length].style.zIndex=99;
+								cont_img[cont_length].style.left=500+'px';
+								animate(cont_img[cont_length],{left:0});
+								}else{
+									cont_img[i].style.zIndex=1;
+									animate(cont_img[i],{left:-500})
+									bth[i].className="slide-bth-item"
+								}
+							}
+				}
+				
+				
+				
+				
+				function getStyle(obj, attr) {
+					if(obj.currentStyle) { //IE浏览器
+						return obj.currentStyle[attr]
+					} else { //Chrome浏览器
+						return getComputedStyle(obj, false)[attr]
+					}
+				}
+				 
+				
+				function animate(obj,attr){
+					clearInterval(obj.time);
+					obj.time=setInterval(function(){
+						var flat=true;
+						for (var i in attr) {
+							var value=0;
+							value=parseInt(getStyle(obj,i));
+							var spet=(attr[i]-value)/10;
+							spet=spet>0?Math.ceil(spet):Math.floor(spet);
+							
+							if(value!=attr[i]){
+								flat=false;
+							}
+							obj.style[i] = value + spet + 'px';
+							
+							//console.log(spet);
+						}
+						if(flat){
+								clearInterval(obj.time);
+							}
+					},15)
+				}
+
+				
+				
+			}
+		</script>
+	</body>
+
+</html>

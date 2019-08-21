@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>淡入淡出轮播</title>
+		<script type="text/jscript" src="http://hovertree.com/ziyuan/jquery/jquery-1.11.3.min.js"></script>
+		<style>
+			* {
+        padding: 0;
+        margin:0;
+    }
+    .z{
+    	left:-50px;
+    }
+    .y{
+     	right:-650px;
+    }
+    a{
+    	text-decoration:none;
+    }
+    ul {
+        list-style: none;
+    }
+    .rotate{
+    	position: relative;/*相对定位，里面的元素布局，最好都带上绝对定位。因为绝对定位是根据父元素来定位的，能使客户端更快的计算出空间*/
+    	overflow: hidden;
+    	height: 400px;
+    	width: 600px;
+    	top: 100px;
+    	left: 500px;
+    	
+    }
+    .img li{
+    	position: absolute;/*父元素用了相对定位，就一定要绝对定位，不然图片会闪白*/
+        left:0;
+        top:0;
+    	display: none;	
+    }
+    img{
+    	height: 400px;
+    	width: 600px;
+    }
+    .img span{
+    	position: absolute;
+    	left: 50px;
+    	bottom: 0;
+    	width: 500px;
+    	line-height: 50px;
+    	color: #fff;
+    	background: #000;
+    	font-size: 24px;
+    	text-align: center;
+    	opacity: 0.3;
+    	display: none;
+    }
+    /*按钮*/
+   .dot{
+   	position: absolute;
+   	width: 600px;
+   	text-align: center;
+   	bottom: 20px;
+   	
+   	
+   }
+   .dot li{
+   	 border-radius:50%;
+   	 height: 20px;
+   	 width: 20px;
+   	 background:#dedede;
+   	 margin: 0px 5px;
+   	 display: inline-block;/*将li块元素转换为内联元素，然后在父元素使用text-align: center;进行文本居中，这个布局思路很好*/
+   }
+    .dot li:hover{
+    	cursor: pointer;	
+    }
+    li.dott{/*，表示li的class为dott才会被选择，或同时拥有class1和class2的元素*/
+    	background: #a00;
+    }
+    /*左右箭头*/
+    .arrows{
+    	
+    	position: absolute;
+   		bottom: 400px;/*重点呀！！！绝对定位了，一定要定下显示位置，不然会被别的定位覆盖，你还摸不着头脑*/
+   	
+   	
+    }
+    .arrows li{
+    	position: absolute;
+    	height: 400px;
+    	width: 50px;
+    	font-size: 50px;
+    	color: #FFF;
+    	background: #000;
+    	opacity: 0.2;
+    	line-height: 400px;
+    	text-align:center;
+    	cursor: pointer;
+    	
+ 
+    }
+		</style>
+	</head>
+	<body>
+		<div class="rotate">
+			<ul class="img">
+				<li><a href="#"><img src="img/img1.jpg"/><span>dsadas</span></a></li>
+				<li><a href="#"><img src="img/img2.jpg"/><span>dsadas</span></a></li>
+				<li><a href="#"><img src="img/img3.jpg"/><span>dsadas</span></a></li>
+				<li><a href="#"><img src="img/img4.jpg"/><span>dsadas</span></a></li>
+				<li><a href="#"><img src="img/img5.jpg"/><span>dsadas</span></a></li>
+			</ul>
+			<ul class="dot">
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+			<ul class="arrows">
+				<li class="z">&lt;</li>
+				<li class="y">&gt;</li>
+			</ul>
+			
+		</div>
+		<script type="text/javascript">
+			$(function(){
+				/*
+				 首先获得第一个img，并且显示
+				 然后获得第一个按钮，增加class，样式
+				 给.rotate绑定移入移出事件，鼠标移入，箭头跟span内容显示 箭头往左往右移动50px
+				 
+				 
+				 然后给按钮绑定点击事件
+				 给触发按钮增加一个class样式，并获取其他同胞元素，删除class样式。
+				 用变量接住，触发按钮的下标位置
+				 然后根据按钮的下标位置，找到对应的图片位置，淡出显示，并获取该图片的其他同胞元素，淡出隐藏
+				 
+				 先创建一个定时器，无限循环，不要在move（）方法后面创建，
+				 
+				 创建变量size接住li的数量
+				 创建变量i等于0
+				 创建左右箭头点击事件效果
+				 左箭头点击
+				 判断，i==-1吗？
+				 等于就改成i=size-1
+				 然后用eq获取.dot li的按钮的下标位置.添加class，然后获取该元素的其他同辈元素，删除样式class
+				 再用eq获取.img li的li的下标位置，设置淡出显示，然后获取该元素的其他同辈元素，淡出隐藏
+				 
+				 给轮播图绑定hove事件
+				 鼠标移入，停止定时器
+				 移出，开始定时器
+				 */
+				
+				$(".img li").eq(0).show();
+				$(".dot li").eq(0).addClass("dott");
+				/*左右箭头*/
+				$(".rotate").hover(function(){
+					$(".img span").show();
+					$(".z").stop().animate({
+						left:""
+					},500);
+				$(".y").stop().animate({
+						right:"-600px"
+					},500);
+				},function(){
+					$(".img span").hide();
+					$(".z").stop().animate({
+						left:"-50px"
+				},500);
+				$(".y").stop().animate({
+					right:"-650px"
+					},500);
+				});
+				
+				/*点击按钮跳转*/
+				$(".dot li").click(function(){
+					$(this).addClass("dott").siblings().removeClass("dott");
+					var xb=$(this).index();
+						//i=xb;
+					$(".img li").eq(xb).fadeIn(600).siblings().fadeOut(600);
+				});
+				/*定时器，无限循环*/
+				var t=setInterval(move, 2000);
+				/*左右点击*/
+				var size=$(".img li").size();//获取图片数量
+				var i=0;
+				/*左点击*/
+				function moveLeft(){
+					i--;//moveLeft函数调用一次，i--
+					if(i==-1){//向左如果到下标为-1的图片
+						i=size-1;//就把i改为图片数量-1，为什么要-1，因为是用eq（）得到图片下标0开始，而size获取的不是下标，是个数1开始，所以要-1.
+					};
+					$(".dot li").eq(i).addClass("dott").siblings().removeClass("dott");
+					$(".img li").eq(i).fadeIn(600).siblings().fadeOut(600);
+				};
+				/*右点击*/
+				function move(){
+					i++;
+					if(i==size){
+						i=0;
+					};
+					$(".dot li").eq(i).addClass("dott").siblings().removeClass("dott");
+					$(".img li").eq(i).fadeIn(600).siblings().fadeOut(600);
+				};
+				/*调用左右点击函数*/
+				$(".z").click(function(){
+					moveLeft();
+				});
+				$(".y").click(function(){
+					move();
+				});
+				/*调用定时器*/
+				$(".rotate").hover(function(){
+					clearInterval(t);/*鼠标移入，定时器停*/
+				},function(){
+					t=setInterval(move, 2000);/*移出，定时器重新开始，每2000毫秒调用一次move（）函数*/
+				});
+				
+			});
+		</script>
+	</body>
+</html>

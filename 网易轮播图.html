@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>网易轮播图</title>
+	</head>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		
+		img {
+			vertical-align: middle;
+		}
+		
+		.slide {
+			width: 500px;
+			height: 450px;
+			overflow: hidden;
+			position: relative;
+			margin: 0 auto;
+		}
+		
+		.slide .cont img {
+			width: 500px;
+			height: 400px;
+		}
+		
+		.slide .cont {
+			width: 500px;
+			height: 400px;
+		}
+		
+		.slide .cont div {
+			position: absolute;
+			left: 500px;
+		}
+		
+		.slide-bth .bth-prev,
+		.slide-bth .bth-next {
+			width: 22px;
+			height: 36px;
+			background: url(img/icon.png) 0 0 no-repeat;
+			position: absolute;
+			top: 50%;
+			margin-top: -36px;
+			left: 10px;
+			z-index: 100;
+		}
+		
+		.slide-bth .bth-next {
+			background-position: -8px -44px;
+			left: auto;
+			right: 10px;
+		}
+		
+		.bth-itemm {
+			width: 500px;
+			height: 50px;
+			background: red;
+			text-align: center;
+		}
+		
+		.slide-bth-item.active {
+			background-position: -24px -762px;
+		}
+		
+		.slide-bth-item {
+			display: inline-block;
+			width: 24px;
+			height: 20px;
+			margin: 15px 10px;
+			background: url(img/icon.png) -24px -782px no-repeat;
+			overflow: hidden;
+		}
+	</style>
+
+	<body>
+		<div class="slide" id="slide">
+			<div class="cont" id="cont">
+				<div>
+					<a href="#"><img src="img/1.jpg" /></a>
+				</div>
+				<div>
+					<a href="#"><img src="img/slidepic4.jpg" /></a>
+				</div>
+				<div>
+					<a href="#"><img src="img/3.jpg" /></a>
+				</div>
+				<div>
+					<a href="#"><img src="img/4.jpg" /></a>
+				</div>
+				<div>
+					<a href="#"><img src="img/5.jpg" /></a>
+				</div>
+				<div>
+					<a href="#"><img src="img/6.jpg" /></a>
+				</div>
+
+			</div>
+			<div class="slide-bth" id="slide-bth">
+				<span class="bth-prev"></span>
+				<span class="bth-next"></span>
+			</div>
+		</div>
+
+		<script>
+			window.onload = function() {
+				var slide = document.getElementById("slide");
+				var cont = document.getElementById("cont");
+				//var cc=document.querySelectorAll(".cont div");
+				// querySelector() 方法仅仅返回匹配指定选择器的第一个元素。如果你需要返回所有的元素，请使用 querySelectorAll() 方法替代。
+				var cont_img = cont.children; //.children获取所有的子节点，不包括文本，非标准；只能获取ID节点下的元素，class节点获取不到；
+				var slide_bth = document.getElementById("slide-bth");
+				var bth_item = slide_bth.children;
+
+				/*添加span按钮节点*/
+				var bth_itemm = document.createElement("div"); //创建新的div节点
+				bth_itemm.className = "bth-itemm"; //设置class
+				for(var i = 0; i < cont_img.length; i++) {
+					var span = document.createElement("span"); //创建新的span节点
+					span.className = "slide-bth-item"; //设置class
+					bth_itemm.appendChild(span); //将新的span节点添加到bth_itemm的子节点最后面
+
+				}
+				slide.appendChild(bth_itemm); //将新的bth_itemm节点添加到slide的子节点最后面
+				var bth = document.getElementsByClassName("slide-bth-item");
+
+				/*初始化*/
+				cont_img[0].style.left = 0 + "px";
+				cont_img[cont_img.length - 1].style.left = -500 + 'px';
+				bth[0].className = "slide-bth-item active"
+				var cont_length = 0;
+
+				/*单击按钮 设置样式*/
+
+				for(var i = 0; i < bth.length; i++) { //遍历bth个数，绑定单击事件，设置样式
+					bth[i].index = i; //设置bth的下标
+					bth[i].onclick = function() { //绑定单击事件
+						for(var i = 0; i < bth.length; i++) { //遍历bth个数
+							if(this.index == i) { //判断是否为目标dom，设置样式
+								cont_length = this.index;
+								bth[i].className = "slide-bth-item active"
+								cont_img[i].style.zIndex = 99;
+								cont_img[i].style.left = 500 + 'px';
+								animate(cont_img[i], {
+									left: 0
+								});
+							} else { //设置目标dom以外的dom样式
+								bth[i].className = "slide-bth-item"
+								cont_img[i].style.zIndex = 1;
+								animate(cont_img[i], {
+									left: -500
+								})
+
+							}
+						}
+
+					}
+				}
+
+				for(var i = 0; i < bth_item.length; i++) {
+					bth_item[i].index = i; //设置bth的下标
+					bth_item[i].onclick = function() { //绑定单击事件
+						if(this.index == 0) {
+							--cont_length < 0 ? cont_length = 5 : cont_length;
+							for(var i = 0; i < cont_img.length; i++) { //遍历cont_img个数
+								if(i == cont_length) { //判断是否为目标dom，设置样式
+									bth[cont_length].className = "slide-bth-item active";
+									cont_img[cont_length].style.zIndex = 99;
+									cont_img[cont_length].style.left = -500 + 'px';
+									animate(cont_img[cont_length], {
+										left: 0
+									});
+								} else { //设置目标dom以外的dom样式
+									cont_img[i].style.zIndex = 1;
+									animate(cont_img[i], {
+										left: 500
+									})
+									bth[i].className = "slide-bth-item"
+								}
+							}
+						} else {
+							lunbo();
+						}
+
+					}
+				}
+				//设置定时器，定时轮播
+				var time = null;
+				time = setInterval(lunbo, 3000);
+				
+				slide.onmouseover = function() { //绑定鼠标移入事件
+					clearInterval(time);
+				}
+				slide.onmouseout = function() { //绑定鼠标移出事件
+					clearInterval(time);
+					time = setInterval(lunbo, 3000)
+				}
+				//轮播动画函数
+				function lunbo() {
+					++cont_length > cont_img.length - 1 ? cont_length = 0 : cont_length;
+					for(var i = 0; i < cont_img.length; i++) {
+						if(i == cont_length) {
+							bth[cont_length].className = "slide-bth-item active"
+							cont_img[cont_length].style.zIndex = 99;
+							cont_img[cont_length].style.left = 500 + 'px';
+							animate(cont_img[cont_length], {
+								left: 0
+							});
+						} else {
+							cont_img[i].style.zIndex = 1;
+							animate(cont_img[i], {
+								left: -500
+							})
+							bth[i].className = "slide-bth-item"
+						}
+					}
+				}
+				//封装好的函数，获取样式style，（解决offset样式的bug）
+				function getStyle(obj, attr) {
+					if(obj.currentStyle) { //IE浏览器
+						return obj.currentStyle[attr]
+					} else { //Chrome浏览器
+						return getComputedStyle(obj, false)[attr]
+					}
+				}
+				//封装的动画函数
+				function animate(obj, attr) {
+					clearInterval(obj.time);
+					obj.time = setInterval(function() {
+						var flat = true; //假设所有运动达到目标值
+						for(var i in attr) { //遍历取出attr的值，通过in操作符，取得当前的属性值
+							var value = 0;
+							value = parseInt(getStyle(obj, i)); //获取样式的当前值
+
+							//计算速度
+							var spet = (attr[i] - value) / 10;
+							spet = spet > 0 ? Math.ceil(spet) : Math.floor(spet);
+							//判断样式的当前值是否等于目标值
+							if(value != attr[i]) {
+								flat = false;
+							}
+							//更改目标DOM的当前样式
+							obj.style[i] = value + spet + 'px';
+
+						}
+						//判断运动是否达到目标值
+						if(flat) {
+							clearInterval(obj.time); //停止定时器
+						}
+					}, 15)
+				}
+
+			}
+		</script>
+	</body>
+
+</html>

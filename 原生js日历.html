@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>原生js日历</title>
+	</head>
+	<style type="text/css">
+				html{overflow:scroll}
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+    font-family:'Microsoft yahei';
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.clearF:after,.clearF:before{
+    content:'';
+    display:block;
+    clear:both;
+}
+a{text-decoration:none}
+
+.calendar{
+	width: 250px;
+	height: 350px;
+	background: #fff;
+	margin: 10px 0 0 10px;
+}
+.calendarBtn{
+	width: 100%;
+	height: 40px;
+	background: #6666ff;
+	color: #fff;
+	font-size: 20px;
+	line-height: 40px;
+	text-align: center;
+	font-size: 16px;
+	border-radius:5px 
+}
+
+.calendarBtn .left{
+	float: left;
+	margin-left: 50px;
+}
+.calendarBtn .right{
+	float: right;
+	margin-right: 50px;
+}
+.calendarBtn .btn{
+	margin-top: 10px;
+	cursor: pointer;
+	width: 20px;
+	height: 20px;
+	background: blueviolet;
+	line-height: 20px;
+	border-radius:5px ;
+	font-weight:bold ;
+}
+.calendarBtn .btn:hover{
+	background: #fff;
+	color: #797979;
+}
+
+.calendar .date{
+	width: 100%;
+}
+.calendar .date p{
+	width: 100%;
+	
+	line-height: 40px;
+}
+.date p span{
+	display: inline-block;
+	width: 12%;
+	height: 40px;
+	line-height: 40px;
+	font-size: 16px;
+	text-align: center;
+}
+.date li{
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	
+}
+.date li span{
+	display: inline-block;
+	width: 12%;
+	/*height: 30px;*/
+	line-height: 30px;
+	border-radius: 5px;
+	margin: 5px 2.5px;
+	font-size:14px;
+	text-align: center;
+	background: burlywood;
+}
+.date li span:hover{
+	background: #58c9f3;
+	color: #fff;
+	cursor: pointer;
+}
+.calendar .date .now{
+	background: #58c9f3;
+}
+	</style>
+	<body>
+		<div class="calendar">
+			<div class="calendarBtn">
+				<div class="left btn">&lt;</div>
+				<span id="year"></span>
+				<span id="month"></span>
+				
+				<div class="right btn">&gt;</div>
+			</div>
+			<div class="date">
+				<p>
+					<span>日</span>
+					<span>一</span>
+					<span>二</span>
+					<span>三</span>
+					<span>四</span>
+					<span>五</span>
+					<span>六</span>
+				</p>
+				<ul>
+					
+					
+				</ul>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		/*思路
+		 获取当前多少年，几月，几日，本月一号是星期几，本月一共有多少天，
+		 然后遍历标签，将得到的数据，插入html标签中，
+		  
+		 创建单击事件函数
+		 单击一次，当年月份++||--
+		 在获取++||--之后的月份数据的1号星期几，一共多少天，
+		 再遍历标签，将之前的数据清除，然后将得到的新数据插入html标签中
+		 * */
+		(function(){
+			var month=document.getElementById('month');
+			var year=document.getElementById('year');
+			var changeMonth=document.getElementsByClassName('btn');
+			var aSpan,oDate,oUl;
+
+			date();
+			var varM=parseInt(month.innerText);//取整当前月份
+			var varY=parseInt(year.innerText);//取整当前年份
+			
+			/*切换日历*/
+			for (var i=0;i<changeMonth.length;i++) {//遍历按钮
+				changeMonth[i].index=i;//获取按钮下标
+				//console.log(changeMonth[i]);
+				changeMonth[i].onclick=function(){//按钮绑定单击事件
+					
+					//var oyear=varY;
+					//var omonth=varM;
+					if(this.index==1){//当前按钮下标==1
+					varM++;//月份++
+					if(varM>12){//月份大于12月
+						varY++;//年份++
+						varM=1;//月份改为1
+					}
+					
+					time();
+					}else{//下标不为1
+						varM--;//月份--
+						if(varM<1){//月份小于1
+							varY--;//年份++
+							varM=12;//月份改为12
+						}
+						time();
+						
+					}
+				}
+			}
+			function time(){
+				month.innerHTML=varM+'月';//获取单击事件后的月份，设置html内容
+				year.innerHTML=varY+'年';//
+				var tMs=new Date().getMonth();//获取当前月份
+				var tYs=new Date().getFullYear();//获取当前年份
+				var tM=varM;
+				var tY=varY;
+				var day=new Date(tY,tM-1,1).getDay();//获取改变后的月份1号是星期几
+				
+				aspan=oUl.getElementsByTagName('span');//获取span标签集合
+				for (var i=0;i<day;i++) {//循环day次数
+					aspan[i].innerHTML='';//将span 文本内容设置为空
+				}
+				var count=new Date(tY,tM,0).getDate();//获取改变后月份的最大天数
+				
+				for (var i=0;i<aspan.length;i++) {//循环span的最大数量次数
+					aspan[i].innerHTML='';//将span文本设置为空
+					aspan[i].style.visibility='visible';//将span设置可见
+					if(aspan[i].hasAttribute('class')){//判断span是否存在class
+						aspan[i].removeAttribute('class');//如果span存在class就删除class
+					}
+					for (var j=1;j<count+1;j++) {//循环改变后月份的最大天数
+						aspan[day-1+j].innerHTML=j;//设置span 1-30号的文本内容
+						
+
+					}
+					var inn=aspan[i].innerHTML;//获取span的文本内容
+					
+					
+					if(inn.length==0){//判断span的文本内容是否为空
+						aspan[i].style.visibility='hidden';//如果为空文本，就隐藏span
+					}
+				}
+				if(varM==tMs+1&&varY==tYs){//判断当前月份跟当前年份是否==改变后的月份，年份
+					date();//如果是就调用该函数
+				}
+			}
+			/*初始化日历*/
+			function date(){
+				var newDate=new Date();//获取当前时间
+				var tM=newDate.getMonth();//获取当前月份
+				var tY=newDate.getFullYear();//获取当前年份
+				var date=newDate.getDate();//获取当前日期
+				var day=new Date(tY,tM,1).getDay()//获取当前月份1号为星期几
+				
+				month.innerHTML=tM+1+'月';//设置当前月份文本内容
+				year.innerHTML=tY+'年';//设置当前年份文本内容
+				
+				oDate=document.getElementsByClassName('date')[0];//获取class为date的标签集合
+				oUl=oDate.children[1];//获取date下的第一个子元素
+			
+				for (var i=0;i<6;i++) {//循环6次
+					var oLi=document.createElement('li');//创建li标签
+					for (var j=0;j<7;j++) {//循环7次
+						var oSpan=document.createElement('span');//创建span标签
+						oLi.appendChild(oSpan);//将span标签插入li标签
+						
+					}
+					oUl.appendChild(oLi);//将li标签插入ul标签
+				}
+				aSpan=oUl.getElementsByTagName('span');//获取ul标签里面的span标签
+				
+				for (var i=0;i<day;i++) {//循环day次
+					aSpan[i].innerHTML='';//将前面span小于day的文本内容设置为空
+				}
+				var count=new Date(tY,tM+1,0).getDate();//获取当前月的最大天数
+				
+				for (var i=1;i<count+1;i++) {//循环最大天数的次数
+					aSpan[day-1+i].innerHTML=i;//设置span 1-30号的文本内容
+					if(aSpan[day-1+i].innerHTML==date){//判断当前文本内容是否==当前日期
+						aSpan[day-1+i].className='now';//如果是，将span添加一个class
+					}
+				}
+				for (var i=0;i<aSpan.length;i++) {//循环span的最大次数
+					var inn=aSpan[i].innerHTML;//获取span的文本内容
+					if(inn.length==0){//判断span文本内容是否为空
+						aSpan[i].style.visibility='hidden';//如果为空，就隐藏。
+					}
+				}
+			}
+			
+		})();
+	</script>
+</html>
+

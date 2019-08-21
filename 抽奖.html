@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>抽奖</title>
+		<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script> 
+		<style>
+			*{
+				padding: 0;
+				margin: 0;
+				
+			}
+			body{
+				background: #DEDEDE;
+				
+			}
+			.zhuti{
+				margin-left: 500px;
+				margin-top: 150px;
+				width: 714px;
+				height: 510px;
+				
+				position: relative;	
+			}
+			.a{
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 102px;
+				width:714px;
+			}
+			.b{
+				position: absolute;
+				top: 102px;
+				left: 0;
+				height: 306px;
+				width: 102px;
+			}
+			
+			.c{
+				position: absolute;
+				top: 102px;
+				left: 102px;
+				height: 306px;
+				width: 510px;	
+			}
+			.d{
+				position: absolute;
+				top: 102px;
+				left: 612px;
+				height: 306px;
+				width: 102px;
+			}
+			.e{
+				position: absolute;
+				top: 408px;
+				left: 0px;
+				height: 102px;
+				width: 714px;
+			}
+			.td{
+				border: solid 1px #dedede;
+				height: 100px;
+				width: 100px;
+				float: left;
+			}
+			.tt{
+				position: absolute;
+				height: 100px;
+				width: 100px;
+				z-index: 3;
+				border: solid 2px red;
+			}
+			.button1,.button2{
+				position:absolute;
+				top:220px;
+				left: 270px;
+				cursor: pointer;
+				width: 150px;
+				height: 40px;
+				background: #481305;
+				color: #fff;
+				border-radius: 5px;
+				line-height: 40px;
+				text-align: center;
+				font-size: 18px;
+				display:inline-block;/*转换为不换行的块元素*/
+			}
+			.button1{
+				left:100px;
+			}
+			.huoJiang{
+				width: 200px;
+				height: 200px;
+				background: #c39862;
+				border: solid 1px #481305;
+				border-radius: 4px;
+				font-size: 18px;
+				line-height: 40px;
+				text-align: center;
+				position: relative;
+				left: 50%;
+				margin-left: -100px;
+				top:50%;
+				margin-top: -100px;
+				z-index: 5;
+				display: none;
+			}
+			.huoJiang span{
+				color: #fff;
+				cursor: pointer;
+				position: absolute;
+				right: 0px;
+				top:0px;
+				height: 30px;
+				width: 30px;
+				display: block;
+				font-size: 18px;
+				line-height: 30px;
+				
+			}
+			.tupian{
+				width: 100px;
+				height: 100px;
+				position: absolute;
+				top:50px;
+				left: 50px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="tt"></div>
+		
+		<div class="zhuti">
+			<div class="a" >
+				<div class="td" data-index = "0"></div>
+				<div class="td" data-index = "1"></div>
+				<div class="td" data-index = "2"></div>
+				<div class="td" data-index = "3"></div>
+				<div class="td" data-index = "4"></div>
+				<div class="td" data-index = "5"></div>
+				<div class="td" data-index = "6"></div>
+			</div>
+			
+			<div class="b">
+				<div class="td" data-index = "19"></div>
+				<div class="td" data-index = "18"></div>
+				<div class="td" data-index = "17"></div>
+			</div>
+			<div class="c">
+				<div class="huoJiang">恭喜您获得了<span>X</span><div class="tupian"></div></div>
+				<div class="button1">开始抽奖</div>
+				<div class="button2">重&nbsp;&nbsp;置</div>
+				
+			</div>
+			<div class="d">
+				<div class="td" data-index = "7"></div>
+				<div class="td" data-index = "8"></div>
+				<div class="td" data-index = "9"></div>
+			</div>
+			<div class="e">
+				<div class="td" data-index = "16"></div>
+				<div class="td" data-index = "15"></div>
+				<div class="td" data-index = "14"></div>
+				<div class="td" data-index = "13"></div>
+				<div class="td" data-index = "12"></div>
+				<div class="td" data-index = "11"></div>
+				<div class="td" data-index = "10"></div>
+			</div>
+		</div>
+		<script>
+			/*
+			 整体思路
+			先 获取奖品div的top，left位置
+			将中奖框移动到奖品div下标为0的位置
+			遍历奖品div，插入图片
+			
+			开始抽奖绑定点击事件
+			判断on是否等1，等于1，单击失效。
+			写个50-70的随机整数
+			写个定时器
+			定时器每执行一次，index0+1，index1+1，on改变值为1；当index0等于奖品图片div的最大值，就变回初始值，
+			遍历奖品图片div，判断当前奖品的data-index值==index0的值，就获取当前奖品的top，left位置，并获取跟data-index对应的奖品下标
+			然后改变一次中奖框的位置
+			判断index1等于随机数，就停止定时器，并且index1恢复初始值，on改为2，恢复单击效果
+			然后获取奖品的data-index对应的td下标的样式集合，
+			在把样式集合插入中奖弹窗，再让弹窗显示，
+			给关闭按钮绑定单击事件，单击，中奖弹窗隐藏
+			
+			给重置按钮绑定单击事件，判断on是否为1，是就让单击效果失效
+			否则index0，index1改为0，获取td下标0的位置，在改变中奖框的位置
+			
+			
+			
+			
+			 * */
+			$(function(){
+				var td=$(".td");/*获取奖品div*/
+				var top=$(".td").eq(0).offset().top;/*获取奖品div的位置*/
+				var left=$(".td").eq(0).offset().left;
+				var index0=0;/*用于代替data-index的值*/
+				var index1=0;/*用于判断等于随机数*/
+				var on=2;/*用于判断抽奖是否正在执行*/
+				var timer=null;/*用于停止定时器*/
+				var cctv;/*用于装跟data-index值对应的td下标*/
+				reset();
+				/*中奖框回到原始位置*/
+				function reset(){
+					$(".tt").css({
+						"left":left,
+						"top":top
+					});
+				};
+				/*遍历奖品div，插入奖品图片*/
+				$(".td").each(function(i){
+					var c=i;
+					$(this).css("background","url(choujiang-img/"+c+".jpg)no-repeat center/cover");
+				});
+				/*单击开始抽奖*/
+				$(".button1").click(function(){
+					/*判断是否正在抽奖，正在抽奖，单击失效*/
+					
+					if(on==1){
+						click=false;
+						return false
+					}
+					var stop = Math.floor(Math.random()*20+50);//获得50-70之间的随机数
+					/*定时器*/
+					timer = setInterval(function(){
+
+						/*奖品div恢复初始值*/
+						if(index0==td.length){
+							index0=0;
+						}
+						/*遍历奖品div，获取this的top，left值*/
+						$(".td").each(function(i){
+							if($(this).data("index")==index0){
+								top=$(this).offset().top;
+								left=$(this).offset().left;	
+								cctv=i;//跟data-index对应的td下标
+						/*移动中奖框位置*/
+								$(".tt").css({
+									"top":top,
+									"left":left
+								});
+							};
+						});
+						
+						/*想法  用index当td的下标，
+						 index1当随机数，
+						 index1每加1，tt的位置就跟index的位置一致
+						 * */
+					index0++
+					index1++
+					on=1;
+				/*停止定时器*/
+						if(index1==stop){
+							clearInterval(timer);
+							on=2;
+							index1=0;
+							/*插入中奖图片样式，弹出恭喜获奖框*/
+							    var src=$(".td").eq(cctv).attr("style");
+								$(".huoJiang .tupian").attr("style",src);
+								$(".huoJiang").fadeIn(300);
+		
+							/*关闭获奖框*/
+							$(".huoJiang span").click(function(){
+								$(".huoJiang").fadeOut(300);
+							});
+							/*判断抽奖是否结束，结束，单击恢复效果*/
+							if(on==2){
+								click=true;
+								return true
+							};
+						};
+				},100);
+				});
+				/*重置中奖*/
+				$(".button2").click(function(){
+					/*判断是否在抽奖，正在抽奖，单击失效*/
+					if(on==1){
+						click=false
+						return false
+					}
+					index0=0;
+					index1=0;
+					top=$(".td").eq(0).offset().top;
+					left=$(".td").eq(0).offset().left;
+					reset();
+					
+				});
+				
+			});
+		</script>
+	</body>
+</html>

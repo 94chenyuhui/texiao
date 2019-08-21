@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>显示隐藏</title>
+		<script type="text/jscript" src="http://hovertree.com/ziyuan/jquery/jquery-1.11.3.min.js"></script>
+		<style>
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			.zhuti{
+				width: 420px;
+				border: 1px solid red;
+				overflow: hidden;
+				position: relative;
+				top: 150px;
+				left: 500px;
+			}
+			.zhuti ul{
+				margin:10px;
+				overflow: hidden;
+				bottom: 20px;
+        left: 0;
+			}
+			.zhuti ul li{
+				
+				float: left;
+				width:98px ;
+				list-style: none;
+				line-height: 30px;
+				border: 1px solid burlywood;
+				text-align: center;
+			}
+			.zhuti button{
+				margin-left:150px ;
+				width: 120px;
+				}
+			.liang{
+				background: #000;
+				color: #fff;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="zhuti">
+			<ul>
+				<li>湖南</li>
+				<li>益阳</li>
+				<li>安化</li>
+				<li>北京</li>
+				<li>黑龙江</li>
+				<li>吉林</li>
+				<li>西安</li>
+				<li>长沙</li>
+				<li>常德</li>
+				<li>岳阳</li>
+				<li>沈阳</li>
+				<li>邵阳</li>
+				<li>无锡</li>
+				<li>江苏</li>
+				<li>新疆</li>
+				<li>洛阳</li>
+				<li>广州</li>
+				<li>上海</li>
+				<li>深圳</li>
+			</ul>
+			<button>显示全部</button>
+			</div>
+			<script type="text/javascript">
+				/*
+				 先获取li下标大于7的元素
+				 隐藏li下标大于7的元素
+				 获取button
+				 给button绑定点击事件
+				 判断li下标大于7的元素是隐藏
+				 如果可见就变隐藏，修改button文字，用toggleClass判断class是否存在，存在自动删除，不存在自动增加
+				 如果隐藏就变可见，修改文字，用toggleClass判断class是否存在，存在自动删除，不存在自动增加
+				 * */
+				$(function(){
+					var aa=$(".zhuti ul li:gt(7):not()");
+					aa.hide();
+					var bb=$(".zhuti button");
+					
+					bb.click(function(){
+						if(aa.is(":visible")){//判断aa<7的元素是否可见，：visible判断是否隐藏
+							aa.hide();
+							bb.text("显示全部");
+							$(".zhuti ul li").filter(":contains(上海),:contains(北京),:contains(沈阳)").toggleClass("liang");
+						}else{	
+							$(".zhuti ul li").filter(":contains(上海),:contains(北京),:contains(沈阳)").toggleClass("liang");
+							aa.show();
+							bb.text("精简显示");
+						};	
+					});
+					
+				});
+			</script>
+	</body>
+</html>

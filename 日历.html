@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<style>
+		html{overflow:scroll}
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+    font-family:'Microsoft yahei';
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.clearF:after,.clearF:before{
+    content:'';
+    display:block;
+    clear:both;
+}
+a{text-decoration:none}
+		.right{width:300px;float:right;padding-top:5px;}
+#box{width:100%;border-radius:5px;box-shadow:0 0 12px #ddd;overflow:hidden;margin-bottom:25px;}
+#box .caltitle{width:100%;height:40px;text-align:center;background:#6666ff;}
+#box .caltitle div{cursor:pointer;color:#fff;display:inline-block;width:20px;height:20px;font-size:20px;font-weight:bold;line-height:20px;border-radius:5px;}
+#box .caltitle div:hover{background:#fff;color:#797979;}
+#box h2{display:inline-block;color:#fff;font-size:12px;height:40px;}
+#box .caltitle span{margin:0 10px;display:inline-block;height:40px;line-height:40px;}
+
+#box .date{width:100%;}
+#box .date p{width:100%;padding-left:3%;height:40px;}
+#box .date p span{display:inline-block;width:12%;height:40px;font-size:14px;text-align:center;line-height:40px;}
+#box .date li{width:100%;padding-left:3%;height:40px;-margin:5px auto;line-height:40px;}
+#box .date li span{border-radius:5px;margin-right:6px;display:inline-block;width:12%;height:29px;font-size:14px;text-align:center;line-height:29px;}
+#box .date li span:hover{background:#58c9f3;cursor:pointer;color:#fff;}
+#box .date li span.now{background:#58c9f3;}
+	</style>
+	<body>
+		    <div class="right">
+		        <div id="box">
+                    <div class="caltitle">
+                        <div class="left btn"> &lt;</div>
+                        <h2><span id='month'></span>
+                        	<span id='year'></span></h2>
+                        <div class="right btn"> &gt;</div>
+                    </div>
+                    <div class="date">
+                        <p>
+                            <span>日</span>
+                            <span>一</span>
+                            <span>二</span>
+                            <span>三</span>
+                            <span>四</span>
+                            <span>五</span>
+                            <span>六</span>
+                        </p>
+                        <ul>
+
+                        </ul>
+                    </div>
+                </div>
+                </div>
+               <script>
+               	    //日历
+    (function(){
+        var tM = document.getElementById('month');//获取id month
+        var tY = document.getElementById('year');//获取 id year
+        var changeMonth = document.getElementsByClassName('btn');//获取class btr按钮
+        
+//      var nowDate1 = new Date();
+//		var month1 = nowDate1.getMonth();
+//		alert(month1);
+        var aSpan,oDate,oUl;
+        date();//调用date函数
+        var valM = tM.innerText;//获取月的纯文本内容
+        var valY = tY.innerText;
+        //点击按钮切换日历
+        for (var i=0;i<changeMonth.length ;i++ )
+        {
+            changeMonth[i].index=i;
+            changeMonth[i].onclick=function(){//点击左右按钮
+               // var year = valY;
+                //var month = valM;
+               // var day = new Date(year,month,1).getDate();//获取当前月份的日期
+                if ( this.index==1)//当前触发事件标签的索引值==1时
+                {
+                	
+                    valM++;//月份++
+                    if ( valM > 12 )//月份大于12月时
+                    {
+                        valY++;//年份++
+                        valM=1;//月份回到1月
+                    }
+                    time();//调用time函数
+                }else{
+                	
+                    valM--;//月份--
+                 
+                    if ( valM == 0 )//月份==0月时
+                    {
+                        valY--;//年份--
+                        valM=12;//月份设为12月
+                    }
+                    time();//调用time函数
+                }
+            };
+        };
+               function time(){
+            tM.innerHTML = valM;//设置月的内容
+            tY.innerHTML = valY;//设置年的内容
+           var date = new Date().getDate();//获取当前几号
+            var months = new Date().getMonth();//获取当前几月
+            var years = new Date().getFullYear();//获取当前几年
+            console.log(months,years);
+            var year = valY;//当前年份
+            var month = valM;//当前月份
+            var day = new Date(year,month-1,1).getDay();//获取上个月的1号是星期几
+            aSpan = oUl.getElementsByTagName('span');//获取ul标签的span
+           for (var i=0;i<day ;i++ )aSpan[i].innerHTML='';//循环当月1号是星期几的次数，将下标为i的span设置为空
+            var count = new Date(year,month,0).getDate();//获取上月的最大天数
+          
+            for (var j=0;j<aSpan.length ;j++ )//循环span标签的最大次数
+            {
+                aSpan[j].innerHTML = '';//将下标为j的span标签设置为空
+                aSpan[j].style.visibility = 'visible';//将下标为j的span标签设置显示
+                for (var i=1;i<=count ;i++ )//循环上月的最大天数次数
+                {
+                    aSpan[day-1+i].innerHTML = i;//设置span的内容
+                    
+                    /*if ( aSpan[day-1+i].innerHTML != date || month != (months+1) || year != years )
+                    //判断当前日期不等于当前日期||当前月数不等于当前月||当前年不等于当前年
+                    {
+                        aSpan[day-1+i].className = '';//将当前日期的span的class设置为空
+                    }else if ( aSpan[day-1+i].innerHTML == date && month == (months+1) && year == years )
+                    //判断当前日期==当前日期和当前月份==当前月份和当前年份==当前年份
+                    {
+                        aSpan[day-1+i].className = 'now';//当前日期设置的class设置为now
+                    }*/
+                }
+
+                var inn = aSpan[j].innerHTML;//获取下标为j的span的内容
+              
+                if ( inn.length == 0 )aSpan[j].style.visibility = 'hidden';//判断当前span的内容为空，就隐藏
+            }
+        };
+        //日历初始化
+        function date(){
+            //获取当前时间
+            var nowDate = new Date();
+            var year = nowDate.getFullYear();//获取当前年份
+            var month = nowDate.getMonth();//获取当前月份
+            var date = nowDate.getDate();//获取当前几号
+            //获取当前这个月的一号是星期几
+            var day = new Date(year,month,1).getDay();//获取当前年，月，1号，是星期几。
+           
+            tM.innerHTML = month+1;//向月份插入内容
+            tY.innerHTML = year;//向年份插入内容
+
+            /*创建存放时间的元素*/
+            oDate = document.getElementsByClassName('date')[0];//获取class 下标为0的标签
+            oUl = oDate.children[1];//获取date 的第二个子元素
+            for (var i=0;i<6 ;i++ )//循环6次，创建li标签，将每个li标签插入ul标签中
+            {
+                var oLi = document.createElement('li');//创建一个li标签
+                
+                for (var j=0;j<7 ;j++ )//循环7次，创建span标签，将每个span插入li标签里面
+                {
+                    var oSpan = document.createElement('span');//创建一个span标签
+                    oLi.appendChild(oSpan);//将span标签，追加到li标签里面
+                }
+                
+                oUl.appendChild(oLi);//将li标签，追加到ul标签里面
+            }
+            /*getElementsByTagName获取标签名*/
+            aSpan = oUl.getElementsByTagName('span');//获取ul标签里面的span标签
+            //编制日历
+           for (var i=0;i<day ;i++ )aSpan[i].innerHTML='';//循环当前月1号是星期几的次数，将前i个的span设为空
+            var count = new Date(year,month+1,0).getDate();//获取这个月有多少天，
+            //alert(count)
+            for (var i=1;i<=count ;i++ )//循环当前月的最大天数次，
+            {
+                aSpan[day-1+i].innerHTML = i;//将span标签填充内容。
+                
+                if ( aSpan[day-1+i].innerHTML == date )aSpan[day-1+i].className = 'now';//将当前几号的span加一个now的class
+            }
+           
+            //没有日期的span隐藏
+            for (var i=0;i<aSpan.length ;i++ )//循环span的数量次数。
+            {
+                var inn = aSpan[i].innerHTML;//获取span标签的内容
+
+                if ( inn.length == 0 ){//判断当span标签的内容长度为零，就表示这个标签为空。
+                	
+                	aSpan[i].style.visibility = 'hidden';//将标签为空的span隐藏。
+                }	
+            }
+        };
+        
+        
+        //日历变化
+
+        
+    })();
+               </script>
+	</body>
+</html>

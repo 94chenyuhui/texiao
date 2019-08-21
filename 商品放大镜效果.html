@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>商品放大镜效果</title>
+	</head>
+	<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script> 
+	<style>
+		*{
+			padding: 0;
+			margin: 0;	
+		}
+		body,html{
+			position: relative;
+		}
+		.zhuTi{
+			width: 400px;
+			height: 500px;
+			border: solid 1px #ccc;
+			margin-left: 100px;
+			margin-top: 100px;
+		}
+		.zhuXian{
+			height: 400px;
+			width: 400px;
+			outline: #DEDEDE 1px solid;
+			
+		}
+		.zhuXian img{
+			height: 400px;
+			width: 400px;
+		}
+		.ziXian ul li{
+			list-style: none;
+			display: inline-block;
+			width: 50px;
+			height: 50px;
+			margin: 22px 11px;
+			border: solid 2px #fff;
+		}
+		li img{
+			width: 50px;
+			height: 50px;
+		}
+		.ziXian ul li.on{
+			border: solid 2px coral;	
+		}
+		.kuang{
+			width: 100px;
+			height: 100px;
+			background: cadetblue;
+			position: absolute;
+			
+			opacity: 0.5;
+			display: none;
+		}
+		.kuangkuang{
+			position: absolute;
+			top: 0px;
+			left: 510px;
+			width: 400px;
+			height: 400px;
+			overflow: hidden;
+			border: solid 1px red;
+			display: none;
+		}
+		.kuangkuang img{
+			position: absolute;
+		}
+		
+	</style>
+	<body>
+		<div class="zhuTi">
+			<div class="zhuXian"><img src="fangda-img/1.jpg"/><div class="kuang"></div></div>
+			<div class="ziXian">
+				<ul>
+					<li class="on"><img src="fangda-img/1.jpg"/></li>
+					<li><img src="fangda-img/2.jpg"/></li>
+					<li><img src="fangda-img/3.jpg"/></li>
+					<li><img src="fangda-img/4.jpg"/></li>
+					<li><img src="fangda-img/5.jpg"/></li>
+				</ul>
+			</div>
+		</div>
+		<div class="kuangkuang"><img/></div>
+		<script>
+			$(function(){
+				
+				$(".ziXian li").mouseenter(function(){
+					$(this).addClass("on").siblings().removeClass("on");
+					var img=$(this).children();
+					var src=img.attr("src");
+					$(".zhuXian img").attr("src",src);
+				});
+				$(".zhuXian").mouseenter(function(){
+					$(".kuang").show();
+					$(".kuangkuang").show();
+					$(this).css("cursor","move");
+					var src=$(this).find("img").attr("src");
+					$(".kuangkuang img").attr("src",src)
+					$(".kuangkuang img").width(1600);
+					$(".kuangkuang img").height(1600);
+					$(".zhuXian").mousemove(function(e){
+						var left=e.pageX;
+						var top=e.pageY;
+						
+						/*left=Math.min(150);
+						left=Math.max(450);
+						top=Math.min(150);
+						top=Math.max(450);*/
+						
+						if(left>450){
+							left=450;
+						}else if(left<150){
+							left=150;
+						}
+						if(top>450){
+							top=450;
+						}else if(top<150){
+							top=150;
+						}
+						$(".kuang").css({
+							"top":top-150+"px",
+							"left":left-50+"px"
+						});
+						$(".kuangkuang img").css({
+							"top":(-top+150)*4,
+							"left":(-left+150)*4
+						});
+						console.log(top+":"+left);
+					});	
+				});
+				$(".zhuXian").mouseleave(function(){
+					$(".kuang").hide();
+					$(".kuangkuang").hide();
+				});
+			
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>左右滑动遮罩层</title>
+		<script type="text/jscript" src="http://hovertree.com/ziyuan/jquery/jquery-1.11.3.min.js"></script>
+		<style>
+			body{
+				padding: 0;
+				margin: 0;
+				/*position: relative;*/
+			}
+			.one{
+				position: relative;/**/
+				top:100px;
+				left: 200px;
+				height:140px;
+				width: 200px;
+				border: 1px solid red;
+				overflow: hidden;
+			}
+			img{
+				height: :140px;
+				width: 200px;
+			}
+			.tupian{
+				height: :140px;
+				width: 200px;
+				position: absolute;
+				
+			}
+			.zhezao{
+				position: absolute;
+				
+				left:-200px;
+				
+				
+				}
+			.zhezao span{
+				display: block;
+				color: #fff;
+				font-size: 28px;
+				line-height: 30px;
+				text-align: center;
+				width: 200px;
+				background: #000;
+				margin-top:55px;
+			}
+			.zz{
+				position: absolute;
+				background: #000;
+				height: 140px;
+				width: 200px;	
+
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div class="one">
+			<div class="tupian"><img src="http://p2.wmpic.me/article/2017/05/15/1494817015_VlSxqHcm.jpg"></div>
+			<div class="zz"></div>
+			<div class="zhezao"><span>遮罩层</span></div>
+		</div>
+		<script type="text/javascript">
+			/*
+			 先将.zz隐藏显示
+			 将.one绑定hove事件
+			 当触发事件
+			 .zz用fadeTO方法改变透明度显示出来
+			 .zhezao左移到0px
+			 再次触发事件
+			 .zz用fadeTO方法改变透明度隐藏
+			 .zhezao再次左移，左移结束，立刻回到-200px。
+			 * */
+			$(function(){
+				$(".zz").hide();
+				$(".one").hover(function(){
+					$(".zz").stop().fadeTo(500,0.5)//
+						$(".zhezao").stop().animate({
+						left:""	
+					},500);
+				},function(){
+					$(".zz").stop().fadeTo(500,0)
+					$(".zhezao").stop().animate({
+						left:"200px"
+					},500).animate({
+						left:"-200px"
+					},0);
+				});
+			});
+
+			
+		</script>
+	</body>
+</html>

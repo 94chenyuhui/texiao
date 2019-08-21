@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>更换主题</title>
+		<script type="text/jscript" src="http://hovertree.com/ziyuan/jquery/jquery-1.11.3.min.js"></script>
+		<style>
+			body{
+				padding: 0;
+				margin: 0;
+				background: #dedede;
+				color: #000000;
+				
+			}
+			.aa{
+				width: 1000px;
+				margin: 0 auto;
+				padding: 0 auto;
+				overflow: hidden;
+				position: relative;
+			}
+			.bb{
+				width: 1000px;
+				height: 250px;
+				background: #DEB887;
+			}
+			.zz{
+				width: 600px;
+				height: 1000px;
+				background: #FF0000;
+				float: left;
+			}
+			.yy{
+				width: 400px;
+				height: 1000px;
+				background: blue;
+				float: right;	
+			}
+			.tt img{
+				position: absolute;
+				height: 80px;
+				width: 80px;
+				border-radius: 50%;
+				top:210px;
+				left: 48%;
+				cursor: pointer;
+			}
+			.tt img:hover{
+				border: 2px solid rosybrown;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="aa">
+			<div class="bb">
+				
+			</div>
+			<div class="zz">
+				
+			</div>
+			<div class="yy">
+				
+			</div>
+			<div class="tt">
+				<img src="http://p2.wmpic.me/article/2017/05/15/1494817015_VlSxqHcm.jpg" />
+			</div>
+		</div>
+		<script type="text/javascript">
+			
+			/*
+			 绑定事件，点击一次k加1
+			 判断k==4？等于的话k变为1
+			 如果k不等于4，k++
+			 再判断k等于1？等于就该等于1的背景色。。。。。
+			 * */
+			$(function(){
+				var k=0;
+				$(".tt img").click(function(){
+						if(k == 4){
+							k = 1
+						}else{
+							k++
+						};
+
+						if (k==1) {
+							$("body").css("background","#417a8c");
+							$(".bb").css("background","#1e6534");
+							$(".zz").css("background","#651e62");
+							$(".yy").css("background","#8a59b5");
+					} else if(k==2){
+							$("body").css("background","#b4a2c3");
+							$(".bb").css("background","#1cc351");
+							$(".zz").css("background","#00ffc6");
+							$(".yy").css("background","#a8c0e4");
+						}else if(k==3){
+							$("body").css("background","beige");
+							$(".bb").css("background","royalblue");
+							$(".zz").css("background","brown");
+							$(".yy").css("background","coral");
+						}else if(k==4){
+							$("body").css("background","#dedede");
+							$(".bb").css("background","#DEB887");
+							$(".zz").css("background","FF0000");
+							$(".yy").css("background","blue");
+						};
+					
+					
+				});
+				
+				
+				
+			});
+			
+			
+
+
+		</script>
+	</body>
+</html>

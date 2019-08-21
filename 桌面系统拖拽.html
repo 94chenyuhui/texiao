@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>桌面系统拖拽</title>
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			
+			body {
+				height: 100%;
+				width: 100%;
+				overflow: hidden;
+				background-color: #000;
+			}
+			
+			ul {
+				height: 100%;
+			}
+			
+			ul li {
+				list-style: none;
+				width: 50px;
+				height: 70px;
+				background: border-box no-repeat 6px 5px;
+				background-size: 50px 50px;
+				border-radius: 3px;
+				padding: 6px;
+				position: absolute;
+			}
+			
+			li span {
+				color: #fff;
+				position: absolute;
+				bottom: 0;
+				-webkit-user-select: none;
+				/*文本不能被选中*/
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+			}
+			
+			ul li.se {
+				/*background: rgda(255,255,255,.3);	*/
+				background-color: rgba(255, 255, 255, .3);
+			}
+			
+			#select {
+				border: 1px dotted #ddd;
+				position: absolute;
+				z-index: 999;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div>
+			<ul>
+				<li>
+					<span>01图标</span>
+				</li>
+				<li>
+					<span>02图标</span>
+				</li>
+				<li>
+					<span>03图标</span>
+				</li>
+				<li>
+					<span>04图标</span>
+				</li>
+				<li>
+					<span>05图标</span>
+				</li>
+				<li>
+					<span>06图标</span>
+				</li>
+				<li>
+					<span>07图标</span>
+				</li>
+				<li>
+					<span>08图标</span>
+				</li>
+				<li>
+					<span>09图标</span>
+				</li>
+				<li>
+					<span>10图标</span>
+				</li>
+				<li>
+					<span>11图标</span>
+				</li>
+			</ul>
+		</div>
+		<script>
+			$(function() {
+				var $li = $('div ul li');
+				var num = 6;
+				var $lih = $li.outerHeight();
+				var $liw = $li.outerWidth()
+				var $winh, h_;
+
+				/* 初始化界面*/
+				(function() {
+					/**初始化界面样式*/
+					(function() {
+						$winh = $(window).height();
+						h_ = Math.round(($winh - num * $lih) / num); //计算每个li元素top一个相隔多少
+						h_ = Math.max(0, h_);//返回0和h_其中一个最大值
+						$li.each(function(i) {
+							this.x = parseInt(i / num); //计算每个this为横向第几排
+							//console.log('间隔高'+h_)
+							this.y = i % num; //计算每个this为纵向第几排
+
+							//设置每个this的背景图片 top left的距离
+							$(this).css({
+								backgroundImage: 'url(tuozhuai-img/pic' + (i + 1) + '.png)',
+								top: this.y * ($lih + h_) + h_ / 2 + 'px',
+								left: this.x * (40 + $liw) + $liw / 2 + 'px'
+							});
+						});
+					})();
+
+					//window窗口大小改变时，重新初始化样式
+					$(window).resize(function() {
+						$winh = $(window).height()
+						h_ = Math.round(($winh - num * $lih) / num);
+						h_ = Math.max(0, h_)
+						$li.each(function(i) {
+							$(this).css({
+								top: this.y * ($lih + h_) + h_ / 2 + 'px',
+								left: this.x * (40 + $liw) + $liw / 2 + 'px'
+							});
+						})
+					});
+					//鼠标移入移出效果
+					$li.hover(function() {
+						$(this).css("backgroundColor", "rgba(255,255,255,.3)");
+					}, function() {
+						$(this).css("backgroundColor", "");
+					});
+				})();
+
+				/*拖拽*/
+				(function() {
+					$li.mousedown(function(e) {//鼠标按下事件
+						var xS = e.pageX;
+						var yS = e.pageY;
+						var x_ = 0,
+							y_ = 0;
+						var tops = [],
+							lefts = [];
+						var $se;
+						var $ss = $(this).hasClass('se');//判断this是否包含se的class
+
+						if(!$ss) {//$ss取反
+							$se = $(this);//获取当前元素
+							//获取当前元素的上距离，左距离
+							tops[0] = this.y * (h_ + $lih) + h_ / 2;
+							lefts[0] = this.x * (40 + $liw) + $liw / 2;
+							$li.removeClass('se');
+						} else {
+							$se = $('ul li.se');//获取所有class为se的元素
+							$se.each(function(i) {
+								//获取每个$se的上距离，左距离，加入数组
+								tops[i] = this.y * (h_ + $lih) + h_ / 2;
+								lefts[i] = this.x * (40 + $liw) + $liw / 2;
+							});
+						};
+								
+						$(document).mousemove(function(e) {//鼠标移动事件
+							var xN = e.pageX;
+							var yN = e.pageY;
+							x_ = xN - xS;
+							y_ = yN - yS;
+							$se.each(function(i) {
+								//设置每个$se的上距离，左距离css样式
+								$(this).css({
+									top: tops[i] + y_ + 'px',
+									left: lefts[i] + x_ + 'px'
+								});
+							});
+
+						});
+						$(document).mouseup(function(e) {//鼠标松开事件
+							$(this).off('mousemove');//解除鼠标移动事件
+
+							var x = [],
+								y = [];
+
+							var cctv = false;
+
+							$se.each(function(i) {
+								//鼠标松开时，获取每个$se的纵向，横向位置
+								x[i] = Math.round(($(this).offset().left - $liw / 2) / (40 + $liw));
+								y[i] = Math.round(($(this).offset().top - h_ / 2) / (h_ + $lih));
+								var $obj = $li.not('se');//获取class为se外的元素
+								
+								for(var j = 0; j < $obj.length; j++) {
+									//判断鼠标松开时，$se位置是否改变
+									if($obj[j].y == y[i] && $obj[j].x == x[i]) {
+										console.log($obj[j].y+'-'+y[i])
+										cctv = true;
+
+									};
+								};
+								if(!cctv) {//鼠标松开时，$se位置改变
+									//当前的$se的纵向，横向位置==移动后的纵向，横向位置
+									this.x = x[i];
+									this.y = y[i];
+
+								}
+								$(this).css({
+									//设置top距离为当前纵向值*（h_+$li的外部高）+h_/2
+									top: this.y * (h_ + $lih) + h_ / 2,
+									//设置left距离为当前横向值*（40+$li的外部宽）+外部宽/2
+									left: this.x * (40 + $liw) + $liw / 2
+								});
+
+							});
+
+							$(this).off('mouseup');//解除鼠标松开事件
+
+						});
+						return false;//事件处理函数返回false,可以防止默认的事件行为
+						
+					});
+				})();
+				/**选中*/
+				(function() {
+					$(document).mousedown(function(e) {//document绑定鼠标按下事件
+						var xS = e.pageX;
+						var yS = e.pageY;
+						var $div = $('<div id=select></div>');//创建html标签
+						$('body').append($div);//将创建的html标签插入到body标签内部子元素的最后面
+						$li.removeClass('se');//删除$li的se
+						$div.css({//设置$div的上，左距离
+							top: yS + 'px',
+							left: xS + 'px'
+						});
+						$(this).mousemove(function(e) {//鼠标移动事件
+							var xN = e.pageX;
+							var yN = e.pageY;
+							var width = xN - xS;
+							var height = yN - yS;
+							if(width < 0) $div.css('left', xS + width + 'px');
+							if(height < 0) $div.css('top', yS + height + 'px');
+							$div.width(Math.abs(width));//设置宽，值如果为负值转换为正数
+							$div.height(Math.abs(height));//设置高，值如果为负值转换为正数
+							$li.each(function(i) { //遍历每个$li
+								if(crash($(this), $div)) //调用crash函数，做碰撞检测
+								{
+									$(this).addClass("se"); //碰撞到了增加class
+
+								} else {
+									$(this).removeClass("se"); //解除碰撞 删除class
+								};
+							});
+						});
+
+						$(this).mouseup(function() {
+							$(this).off('mousemove');
+							$(this).off('mouseup');
+							$div.remove();//删除$div标签
+						});
+						
+					});
+				})();
+				/*碰撞检测*/
+				function crash($1, $2) {
+					var t1 = $1.offset().top, //获取参数1的top距离
+						b1 = t1 + $1.outerHeight(), //获取参数1的top距离+外部高度距离
+						l1 = $1.offset().left,
+						r1 = l1 + $1.outerWidth();
+
+					var t2 = $2.offset().top,
+						b2 = t2 + $2.outerHeight(),
+						l2 = $2.offset().left,
+						r2 = l2 + $2.outerWidth();
+						//判断参数1跟参数2的值是否有重合，只要任意一个值重合，返回false，否则返回true
+					return(t1 > b2 || b1 < t2 || l1 > r2 || r1 < l2) ? false : true;
+				}
+
+			})
+		</script>
+	</body>
+
+</html>
